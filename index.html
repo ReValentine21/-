@@ -5,119 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>REVALENTINE APPS</title>
     <style>
-        :root { --primary: #007bff; --accent: #00d4ff; --bg: #000; }
+        :root { 
+            --primary: #007bff; 
+            --accent: #00d4ff; 
+            --bg: #050505; 
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --text: #e0e0e0;
+        }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 15px;
-            overflow-x: hidden; perspective: 1200px;
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; padding: 15px;
+            overflow-x: hidden; 
+            line-height: 1.6;
         }
 
+        /* Анимированный фон */
         #bg-layer {
-            position: fixed; top: -5%; left: -5%; width: 110%; height: 110%;
-            background-image: linear-gradient(rgba(0, 123, 255, 0.15) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(0, 123, 255, 0.15) 1px, transparent 1px);
-            background-size: 50px 50px; z-index: -1;
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); /* Плавный фильтр тряски */
-            pointer-events: none;
-            animation: backgroundScroll 30s linear infinite;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(0, 123, 255, 0.1), transparent),
+                linear-gradient(rgba(0, 123, 255, 0.05) 1px, transparent 1px) 0 0 / 40px 40px,
+                linear-gradient(90deg, rgba(0, 123, 255, 0.05) 1px, transparent 1px) 0 0 / 40px 40px;
+            z-index: -1;
+            animation: bgMove 20s linear infinite;
         }
-        @keyframes backgroundScroll { from { background-position: 0 0; } to { background-position: 0 500px; } }
+        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 0 400px; } }
+
+        .container { max-width: 500px; margin: 0 auto; animation: fadeInUp 0.8s ease-out; }
         
-        .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header { text-align: center; margin-bottom: 30px; }
         
-        h1 { font-size: 2.2em; text-align: center; text-transform: uppercase; margin: 20px 0; animation: mobileGlitch 4s infinite; }
-        @keyframes mobileGlitch { 0%, 100% { text-shadow: 2px 2px var(--primary); } 50% { text-shadow: -2px -1px #ff0055; transform: scale(1.01); } }
+        h1 { 
+            font-size: 2.5em; margin: 10px 0; 
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        /* КНОПКА "О СЕБЕ" */
+        .about-trigger {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--accent); padding: 8px 15px; border-radius: 20px;
+            cursor: pointer; font-size: 0.9em; transition: 0.3s;
+        }
+        .about-trigger:hover { background: rgba(0, 123, 255, 0.2); }
+
+        /* МОДАЛЬНОЕ ОКНО */
+        #about-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100; backdrop-filter: blur(8px);
+            align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+        }
+        .modal-content {
+            background: #111; border: 1px solid var(--primary); padding: 25px;
+            border-radius: 20px; max-width: 400px; position: relative;
+            box-shadow: 0 0 40px rgba(0, 123, 255, 0.2);
+        }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #555; }
+
+        /* КАРТОЧКИ ОБНОВЛЕНИЙ */
+        .update-card { 
+            background: var(--card-bg); border-radius: 20px; padding: 20px; 
+            margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); 
+            transition: transform 0.3s ease, border-color 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .update-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
-        .update-card { background: rgba(15, 15, 15, 0.95); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; box-shadow: 0 8px 25px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
-        .date { display: inline-block; background: rgba(0, 123, 255, 0.2); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 0.75em; margin-bottom: 12px; }
-        
+        .date { 
+            display: inline-block; background: var(--primary); color: #fff; 
+            padding: 3px 10px; border-radius: 6px; font-size: 0.7em; 
+            font-weight: bold; margin-bottom: 10px; letter-spacing: 1px;
+        }
+
         .btn { 
             display: block; background: linear-gradient(135deg, var(--primary), var(--accent)); 
-            color: #fff; padding: 16px; text-decoration: none; border-radius: 12px; 
+            color: #fff; padding: 14px; text-decoration: none; border-radius: 12px; 
             font-weight: bold; text-align: center; margin-top: 15px; border: none; 
-            text-transform: uppercase; transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
         }
-        .btn:active { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 212, 255, 0.6); }
+        .btn:active { transform: scale(0.97); }
 
-        /* СПЕЦИАЛЬНАЯ КНОПКА ИГРЫ */
-        #game-toggle-btn { background: #111; border: 1px solid #222; color: #555; font-size: 0.8em; }
-        #game-toggle-btn.active { 
-            color: #fff; border-color: var(--accent); 
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-            background: rgba(0, 123, 255, 0.2);
-        }
-
-        /* ИГРОВАЯ ПАНЕЛЬ */
-        #game-panel { display: none; margin-top: 20px; border: 1px solid gold; background: #050505; overflow: hidden; }
-        #pongCanvas { background: #000; width: 100%; height: 220px; touch-action: none; display: block; border-radius: 10px; }
-        #game-ui { display: flex; justify-content: space-around; padding: 10px; color: gold; font-weight: bold; }
-        #game-over { 
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 10;
-        }
-
-        footer { text-align: center; margin-top: 40px; color: #444; font-size: 0.8em; }
+        /* ИГРА */
+        #game-panel { display: none; margin-top: 20px; }
+        #pongCanvas { background: #000; width: 100%; height: 220px; border-radius: 12px; touch-action: none; border: 1px solid #222; }
+        
+        footer { text-align: center; margin: 40px 0; color: #555; font-size: 0.8em; }
+        ul { padding-left: 20px; color: #aaa; }
+        li { margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div id="bg-layer"></div>
 
+<!-- МОДАЛЬНОЕ ОКНО О СЕБЕ -->
+<div id="about-modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleAbout()">&times;</span>
+        <h2 style="color:var(--accent); margin-top:0;">👨‍💻 ReValentine</h2>
+        <p>Привет! Я новичок, который мечтает создавать крутые миры.</p>
+        <div style="font-size: 0.9em; color: #bbb;">
+            <p><b>Изучаю:</b> HTML, Python (логика).</p>
+            <p><b>Цель:</b> Перейти на C# и Java для 2D/3D геймдева.</p>
+            <p>Это мой первый сайт-портфолио. Спасибо, что заглянули!</p>
+        </div>
+    </div>
+</div>
+
 <div class="container">
-    <h1>👷‍♂️ REVALENTINE</h1>
-     <p class="subtitle">↓ Обновления и новости моих проектов ↓</p>
+    <header>
+        <button class="about-trigger" onclick="toggleAbout()">👤 ОБО МНЕ</button>
+        <h1>REVALENTINE</h1>
+        <p style="color: #666; margin: 0;">Лаборатория моих первых проектов</p>
+    </header>
 
-    <div class="update-card" style="border-left: 4px solid var(--accent);">
-        <div class="date">15 марта 2026 • NEW</div>
-        <h2>SubBird GAME V0.1</h2>
-        <ul><li>Крутая, красивая птичка.</li><li>Отличный геймплей.</li></ul>
-        <a href="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/SupBird.v0.1.apk" class="btn">Скачать Игру</a>
+    <div class="update-card" style="border-left: 4px solid #00ff88;">
+        <div class="date">15 МАРТА 2026 • НОВОЕ</div>
+        <h2 style="margin:5px 0;">SubBird GAME V0.1</h2>
+        <ul><li>Красочная графика</li><li>Затягивающий геймплей</li></ul>
+        <a href="https://github.com" class="btn">СКАЧАТЬ ИГРУ</a>
     </div>
 
-    <div class="update-card">
-        <div class="date">14 марта 2026</div>
-        <h2>NCalc Calculator V0.2</h2>
-        <ul><li>Адаптивный шрифт.</li></ul>
-        <a href="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/NCalcV1-0.2-arm64-v8a_armeabi-v7a-debug.apk" class="btn">Скачать Игру</a>
+    <div class="update-card" style="border-left: 4px solid var(--primary);">
+        <div class="date">14 МАРТА 2026</div>
+        <h2 style="margin:5px 0;">NCalc Calculator V0.2</h2>
+        <ul><li>Адаптивный интерфейс</li><li>Исправлены шрифты</li></ul>
+        <a href="https://github.com" class="btn" style="background: #222; border: 1px solid #444;">СКАЧАТЬ ПРИЛОЖЕНИЕ</a>
     </div>
 
-    <div class="update-card" style="background: rgba(255,255,255,0.02); border: 2px dashed #222; text-align:center;">
-        <h3>💡 ЕСТЬ ИДЕЯ ДЛЯ ПРИЛОЖЕНИЯ?</h3>
-        <p>Напиши мне в Телеграм, и я добавлю это в следующее обновление!</p>
-        <a href="https://t.me/DrdonutSwort" class="btn">ПРЕДЛОЖИТЬ ИДЕЮ</a>
+    <div class="update-card" style="background: linear-gradient(to bottom, rgba(0,123,255,0.05), transparent); text-align: center; border: 1px dashed #333;">
+        <h3 style="margin-top:0;">💡 ЕСТЬ ИДЕЯ?</h3>
+        <p style="font-size: 0.9em; color: #888;">Напиши мне, и мы создадим что-то крутое вместе!</p>
+        <a href="https://t.me" class="btn" style="background: #0088cc;">НАПИСАТЬ В TELEGRAM</a>
     </div>
 
-    <!-- КНОПКА С АВТО-СКРОЛЛОМ -->
-    <button id="game-toggle-btn" onclick="toggleGame()" class="btn">🎮 МИНИ-ИГРА (PONG)</button>
+    <button id="game-toggle-btn" onclick="toggleGame()" class="btn" style="background: none; border: 1px solid #333; color: #888;">🎮 МИНИ-ИГРА (PONG)</button>
 
     <div id="game-panel" class="update-card">
-        <div id="game-ui">
-            <span>СЧЕТ: <span id="score">0</span></span>
-            <span>РЕКОРД: <span id="highScore">0</span></span>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: gold; font-family: monospace;">
+            <span>SCORE: <span id="score">0</span></span>
+            <span>BEST: <span id="highScore">0</span></span>
         </div>
-        <canvas id="pongCanvas"></canvas>
-        <div id="game-over">
-            <h3 style="color:#ff0055">GAME OVER</h3>
-            <button class="btn" onclick="resetGame()" style="width:140px;">РЕСТАРТ</button>
+        <div style="position: relative;">
+            <canvas id="pongCanvas"></canvas>
+            <div id="game-over" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); flex-direction:column; align-items:center; justify-content:center; border-radius:12px;">
+                <h2 style="color:#ff0055; margin-bottom:10px;">GAME OVER</h2>
+                <button class="btn" onclick="resetGame()" style="width:120px; padding: 10px;">ПОВТОР</button>
+            </div>
         </div>
     </div>
 
-    <footer>© 2026 Well. Python & HTML</footer>
+    <footer>© 2026 ReValentine. Создано с помощью Python & HTML</footer>
 </div>
 
 <script>
-    // ПЛАВНЫЙ 3D ЭФФЕКТ (БЕЗ ТРЯСКИ)
-    const bgLayer = document.getElementById('bg-layer');
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', (e) => {
-            let rY = Math.min(Math.max(e.gamma, -3), 3); 
-            let rX = Math.min(Math.max(e.beta - 45, -3), 3); 
-            bgLayer.style.transform = `rotateY(${rY}deg) rotateX(${rX}deg)`;
-        });
+    // Модальное окно
+    function toggleAbout() {
+        const modal = document.getElementById('about-modal');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    // ИГРА И СКРОЛЛ
+    // Логика игры (Pong)
     const canvas = document.getElementById("pongCanvas");
     const ctx = canvas.getContext("2d");
     const btn = document.getElementById("game-toggle-btn");
@@ -130,20 +187,18 @@
     function toggleGame() {
         if (panel.style.display === "block") {
             panel.style.display = "none";
-            btn.classList.remove("active");
             gameRunning = false;
         } else {
             panel.style.display = "block";
-            btn.classList.add("active");
-            // Плавный скролл вниз
             setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth' }); }, 100);
             resetGame();
         }
     }
 
     function init() {
-        ball = { x: 150, y: 30, dx: 2, dy: 2, radius: 6, color: "#00d4ff" };
-        paddle = { w: 70, h: 10, x: (canvas.width - 70) / 2 };
+        canvas.width = canvas.offsetWidth; // Адаптивность ширины
+        ball = { x: canvas.width/2, y: 30, dx: 3, dy: 3, radius: 7, color: "#00d4ff" };
+        paddle = { w: 80, h: 10, x: (canvas.width - 80) / 2 };
         score = 0; document.getElementById("score").innerText = score;
     }
 
@@ -151,30 +206,43 @@
         if (!gameRunning) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
+        // Отрисовка мяча
         ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-        if (score >= 50) { ctx.shadowBlur = 15; ctx.shadowColor = "orange"; ctx.fillStyle = "#ff4500"; }
-        else { ctx.shadowBlur = 0; ctx.fillStyle = ball.color; }
+        ctx.fillStyle = ball.color;
+        ctx.shadowBlur = 10; ctx.shadowColor = ball.color;
         ctx.fill(); ctx.closePath();
 
-        ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, canvas.height - 15, paddle.w, paddle.h);
+        // Отрисовка платформы
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(paddle.x, canvas.height - 20, paddle.w, paddle.h);
 
+        // Столкновения со стенами
         if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) ball.dx = -ball.dx;
         if (ball.y + ball.dy < ball.radius) ball.dy = -ball.dy;
         
-        if (ball.y + ball.dy > canvas.height - 15 - ball.radius) {
+        // Столкновение с платформой
+        if (ball.y + ball.dy > canvas.height - 20 - ball.radius) {
             if (ball.x > paddle.x && ball.x < paddle.x + paddle.w) {
                 ball.dy = -ball.dy; score++;
                 document.getElementById("score").innerText = score;
                 ball.dx *= 1.05; ball.dy *= 1.05;
-                if (score >= 40) ball.color = "#ff00ff";
-                else if (score >= 30) ball.color = "#ffff00";
+                
+                // Смена цветов
+                if (score >= 30) ball.color = "#ff00ff";
                 else if (score >= 20) ball.color = "#00ff00";
                 else if (score >= 10) ball.color = "#ff0055";
             } else {
-                gameRunning = false; document.getElementById("game-over").style.display = "flex";
-                if (score > highScore) { highScore = score; localStorage.setItem("pong_record", highScore); document.getElementById("highScore").innerText = highScore; }
+                gameRunning = false; 
+                document.getElementById("game-over").style.display = "flex";
+                if (score > highScore) { 
+                    highScore = score; 
+                    localStorage.setItem("pong_record", highScore); 
+                    document.getElementById("highScore").innerText = highScore; 
+                }
             }
         }
+
         ball.x += ball.dx; ball.y += ball.dy;
         anim = requestAnimationFrame(draw);
     }
@@ -185,7 +253,7 @@
         gameRunning = true; init(); draw();
     }
 
-    // Исправленное управление тачем
+    // Управление
     canvas.addEventListener("touchmove", (e) => {
         let rect = canvas.getBoundingClientRect();
         let touchX = e.touches[0].clientX - rect.left;
@@ -194,7 +262,12 @@
         if (paddle.x > canvas.width - paddle.w) paddle.x = canvas.width - paddle.w;
         e.preventDefault();
     }, {passive: false});
-</script>
 
+    // Для мышки на всякий случай
+    canvas.addEventListener("mousemove", (e) => {
+        let rect = canvas.getBoundingClientRect();
+        paddle.x = e.clientX - rect.left - paddle.w/2;
+    });
+</script>
 </body>
 </html>
