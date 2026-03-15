@@ -8,11 +8,18 @@
         :root { --primary: #007bff; --accent: #00d4ff; --bg: #000; }
         body { 
             font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 15px;
+            overflow-x: hidden;
             background-image: linear-gradient(rgba(0, 123, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 123, 255, 0.15) 1px, transparent 1px);
             background-size: 45px 45px; animation: backgroundScroll 25s linear infinite;
+            perspective: 1000px; /* Нужно для 3D эффекта */
         }
         @keyframes backgroundScroll { from { background-position: 0 0; } to { background-position: 0 450px; } }
-        .container { max-width: 500px; margin: 0 auto; }
+        
+        /* Основной контейнер для 3D наклона */
+        #main-container { 
+            max-width: 500px; margin: 0 auto; 
+            transition: transform 0.1s ease-out; /* Плавность наклона */
+        }
         
         h1 { font-size: 2.2em; text-align: center; text-transform: uppercase; margin: 20px 0; animation: mobileGlitch 4s infinite; }
         @keyframes mobileGlitch { 0%, 100% { text-shadow: 2px 2px var(--primary); } 50% { text-shadow: -2px -1px #ff0055; transform: scale(1.01); } }
@@ -36,14 +43,13 @@
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.95); flex-direction: column; justify-content: center; align-items: center; z-index: 10;
         }
-        #leaderboard { display: none; padding: 15px; background: #111; border-top: 1px solid #333; font-size: 0.85em; }
 
         footer { text-align: center; margin-top: 40px; color: #444; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="main-container">
     <h1>👷‍♂️ REVALENTINE</h1>
     <p class="subtitle">↓ Обновления и новости моих проектов ↓</p>
 
@@ -51,9 +57,11 @@
     <div class="update-card" style="border-left: 4px solid var(--accent);">
         <div class="date">15 марта 2026 • NEW</div>
         <h2>SubBird GAME V0.1</h2>
+        <p>Релиз новой игры! Что внутри:</p>
         <ul>
             <li>Супер крутая птичка.</li>
             <li>Прикольный гемплей.</li>
+            <li>Покоряй свои рекорды!</li>
         </ul>
         <a href="https://github.com" class="btn">Скачать Игру</a>
     </div>
@@ -62,17 +70,19 @@
     <div class="update-card">
         <div class="date">14 марта 2026</div>
         <h2>NCalc Calculator V0.2</h2>
+        <p>Добавил новых фишек в калькулятор:</p>
         <ul>
             <li>Адаптивный шрифт.</li>
-            <li>Кнопка удаления (<-).</li>
+            <li>Кнопка удаления символа (<-).</li>
         </ul>
         <a href="https://github.com" class="btn">Скачать APK</a>
     </div>
 
-    <!-- ИДЕИ -->
+    <!-- РАЗДЕЛ ДЛЯ ИДЕЙ -->
     <div class="idea-section">
-        <h3>💡 ЕСТЬ ИДЕЯ?</h3>
-        <a href="https://t.me" class="btn" style="background:transparent; border:1px solid #333;">TELEGRAM</a>
+        <h3>💡 ЕСТЬ ИДЕЯ ДЛЯ ПРИЛОЖЕНИЯ?</h3>
+        <p>Напиши мне в Телеграм, и я добавлю это в следующее обновление!</p>
+        <a href="https://t.me" class="btn">ПРЕДЛОЖИТЬ ИДЕЮ</a>
     </div>
 
     <!-- КНОПКА ИГРЫ -->
@@ -87,14 +97,7 @@
         <canvas id="pongCanvas"></canvas>
         <div id="game-over">
             <h3 style="color:#ff0055">GAME OVER</h3>
-            <button class="btn" onclick="resetGame()" style="width:140px; font-size:0.8em">РЕСТАРТ</button>
-            <button class="btn" onclick="toggleLeaders()" style="width:140px; font-size:0.8em; background:#222">ЛИДЕРЫ</button>
-        </div>
-        <div id="leaderboard">
-            <h4 style="margin:0 0 10px 0">🏆 ТОП ИГРОКОВ</h4>
-            <div style="display:flex; justify-content:space-between"><span>1. Well (Dev)</span><span>999</span></div>
-            <div style="display:flex; justify-content:space-between"><span>2. DrDonut</span><span>154</span></div>
-            <div style="display:flex; justify-content:space-between"><span>3. Player_1</span><span>42</span></div>
+            <button class="btn" onclick="resetGame()" style="width:140px;">РЕСТАРТ</button>
         </div>
     </div>
 
@@ -102,6 +105,20 @@
 </div>
 
 <script>
+    // СКРИПТ ДЛЯ 3D ЭФФЕКТА (ГИРОСКОП)
+    const container = document.getElementById('main-container');
+    
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (event) => {
+            // Ограничиваем наклон, чтобы он был легким (не более 10 градусов)
+            let rotateY = Math.min(Math.max(event.gamma, -10), 10); 
+            let rotateX = Math.min(Math.max(event.beta - 45, -10), 10); 
+            
+            container.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+        });
+    }
+
+    // ЛОГИКА ИГРЫ
     const canvas = document.getElementById("pongCanvas");
     const ctx = canvas.getContext("2d");
     let score = 0, highScore = localStorage.getItem("pong_record") || 0;
@@ -118,21 +135,18 @@
     function init() {
         ball = { x: 150, y: 20, dx: 2, dy: 2, radius: 6, color: "#00d4ff" };
         paddle = { w: 70, h: 10, x: 115 };
-        score = 0;
-        document.getElementById("score").innerText = score;
+        score = 0; document.getElementById("score").innerText = score;
     }
 
     function draw() {
         if (!gameRunning) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Мяч с эффектами
+        
         ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
         if (score >= 50) { ctx.shadowBlur = 15; ctx.shadowColor = "orange"; ctx.fillStyle = "#ff4500"; }
         else { ctx.shadowBlur = 0; ctx.fillStyle = ball.color; }
         ctx.fill(); ctx.closePath();
 
-        // Платформа
         ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, canvas.height - 15, paddle.w, paddle.h);
 
         if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) ball.dx = -ball.dx;
@@ -141,7 +155,7 @@
             if (ball.x > paddle.x && ball.x < paddle.x + paddle.w) {
                 ball.dy = -ball.dy; score++;
                 document.getElementById("score").innerText = score;
-                ball.dx *= 1.06; ball.dy *= 1.06; // Ускорение
+                ball.dx *= 1.06; ball.dy *= 1.06;
                 if (score >= 40) ball.color = "#ff00ff";
                 else if (score >= 30) ball.color = "#ffff00";
                 else if (score >= 20) ball.color = "#00ff00";
@@ -158,14 +172,8 @@
 
     function resetGame() {
         document.getElementById("game-over").style.display = "none";
-        document.getElementById("leaderboard").style.display = "none";
         cancelAnimationFrame(animationId);
         gameRunning = true; init(); draw();
-    }
-
-    function toggleLeaders() {
-        const lb = document.getElementById("leaderboard");
-        lb.style.display = lb.style.display === "block" ? "none" : "block";
     }
 
     canvas.addEventListener("touchmove", (e) => {
