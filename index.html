@@ -6,32 +6,70 @@
     <title>REVALENTINE APPS</title>
     <style>
         :root { --primary: #007bff; --accent: #00d4ff; --bg: #000; }
-        body { 
-            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 15px;
-            overflow-x: hidden;
-            background-image: linear-gradient(rgba(0, 123, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 123, 255, 0.15) 1px, transparent 1px);
-            background-size: 45px 45px; animation: backgroundScroll 25s linear infinite;
-            perspective: 1000px; /* Нужно для 3D эффекта */
-        }
-        @keyframes backgroundScroll { from { background-position: 0 0; } to { background-position: 0 450px; } }
         
-        /* Основной контейнер для 3D наклона */
-        #main-container { 
-            max-width: 500px; margin: 0 auto; 
-            transition: transform 0.1s ease-out; /* Плавность наклона */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            color: #fff; 
+            margin: 0; 
+            padding: 15px;
+            overflow-x: hidden;
+            perspective: 1000px;
         }
+
+        #bg-layer {
+            position: fixed;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            background-image: linear-gradient(rgba(0, 123, 255, 0.2) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0, 123, 255, 0.2) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: -1;
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+            animation: backgroundScroll 25s linear infinite;
+        }
+
+        @keyframes backgroundScroll { 
+            from { background-position: 0 0; } 
+            to { background-position: 0 450px; } 
+        }
+        
+        .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
         
         h1 { font-size: 2.2em; text-align: center; text-transform: uppercase; margin: 20px 0; animation: mobileGlitch 4s infinite; }
         @keyframes mobileGlitch { 0%, 100% { text-shadow: 2px 2px var(--primary); } 50% { text-shadow: -2px -1px #ff0055; transform: scale(1.01); } }
+        
         .subtitle { text-align: center; color: var(--accent); font-size: 0.9em; margin-bottom: 30px; text-transform: uppercase; }
 
         .update-card { background: rgba(15, 15, 15, 0.95); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; box-shadow: 0 8px 25px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
         .date { display: inline-block; background: rgba(0, 123, 255, 0.2); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 0.75em; margin-bottom: 12px; }
+        
         h2 { font-size: 1.5em; margin: 0 0 10px 0; }
         ul { padding-left: 18px; color: #aaa; font-size: 0.9em; }
 
-        .btn { display: block; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 16px; text-decoration: none; border-radius: 12px; font-weight: bold; text-align: center; margin-top: 15px; border: none; text-transform: uppercase; }
-        .btn:active { transform: scale(0.95); }
+        /* ЭФФЕКТ ЗАЖАТИЯ И РАСТЕКАНИЯ */
+        .btn { 
+            display: block; 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: #fff; 
+            padding: 16px; 
+            text-decoration: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            text-align: center; 
+            margin-top: 15px; 
+            border: none; 
+            text-transform: uppercase; 
+            transition: all 0.2s ease; /* Плавный возврат */
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn:active { 
+            transform: scale(1.05); /* Кнопка немного увеличивается */
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6); /* Тень "растекается" */
+            filter: brightness(1.2); 
+        }
 
         .idea-section { background: rgba(255, 255, 255, 0.02); border: 2px dashed #222; padding: 30px 20px; border-radius: 20px; text-align: center; margin-top: 40px; }
 
@@ -49,7 +87,9 @@
 </head>
 <body>
 
-<div id="main-container">
+<div id="bg-layer"></div>
+
+<div class="container">
     <h1>👷‍♂️ REVALENTINE</h1>
     <p class="subtitle">↓ Обновления и новости моих проектов ↓</p>
 
@@ -75,7 +115,8 @@
             <li>Адаптивный шрифт.</li>
             <li>Кнопка удаления символа (<-).</li>
         </ul>
-        <a href="https://github.com" class="btn">Скачать APK</a>
+        <!-- Текст изменен на Скачать Игру -->
+        <a href="https://github.com" class="btn">Скачать Игру</a>
     </div>
 
     <!-- РАЗДЕЛ ДЛЯ ИДЕЙ -->
@@ -85,10 +126,8 @@
         <a href="https://t.me" class="btn">ПРЕДЛОЖИТЬ ИДЕЮ</a>
     </div>
 
-    <!-- КНОПКА ИГРЫ -->
     <button onclick="toggleGame()" class="btn" style="background: #111; border: 1px solid #222; color: #555; font-size: 0.7em; margin-top: 20px;">🎮 МИНИ-ИГРА (PONG)</button>
 
-    <!-- ИГРОВАЯ ПАНЕЛЬ -->
     <div id="game-panel" class="update-card">
         <div id="game-ui">
             <span>СЧЕТ: <span id="score">0</span></span>
@@ -105,25 +144,19 @@
 </div>
 
 <script>
-    // СКРИПТ ДЛЯ 3D ЭФФЕКТА (ГИРОСКОП)
-    const container = document.getElementById('main-container');
-    
+    const bgLayer = document.getElementById('bg-layer');
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', (event) => {
-            // Ограничиваем наклон, чтобы он был легким (не более 10 градусов)
-            let rotateY = Math.min(Math.max(event.gamma, -10), 10); 
-            let rotateX = Math.min(Math.max(event.beta - 45, -10), 10); 
-            
-            container.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+            let rotateY = Math.min(Math.max(event.gamma, -5), 5); 
+            let rotateX = Math.min(Math.max(event.beta - 45, -5), 5); 
+            bgLayer.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(-50px)`;
         });
     }
 
-    // ЛОГИКА ИГРЫ
     const canvas = document.getElementById("pongCanvas");
     const ctx = canvas.getContext("2d");
     let score = 0, highScore = localStorage.getItem("pong_record") || 0;
     document.getElementById("highScore").innerText = highScore;
-
     let ball, paddle, gameRunning = false, animationId;
 
     function toggleGame() {
@@ -141,14 +174,11 @@
     function draw() {
         if (!gameRunning) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
         if (score >= 50) { ctx.shadowBlur = 15; ctx.shadowColor = "orange"; ctx.fillStyle = "#ff4500"; }
         else { ctx.shadowBlur = 0; ctx.fillStyle = ball.color; }
         ctx.fill(); ctx.closePath();
-
         ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, canvas.height - 15, paddle.w, paddle.h);
-
         if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) ball.dx = -ball.dx;
         if (ball.y + ball.dy < ball.radius) ball.dy = -ball.dy;
         if (ball.y + ball.dy > canvas.height - 15 - ball.radius) {
@@ -161,8 +191,7 @@
                 else if (score >= 20) ball.color = "#00ff00";
                 else if (score >= 10) ball.color = "#ff0055";
             } else {
-                gameRunning = false;
-                document.getElementById("game-over").style.display = "flex";
+                gameRunning = false; document.getElementById("game-over").style.display = "flex";
                 if (score > highScore) { highScore = score; localStorage.setItem("pong_record", highScore); document.getElementById("highScore").innerText = highScore; }
             }
         }
@@ -178,7 +207,7 @@
 
     canvas.addEventListener("touchmove", (e) => {
         let rect = canvas.getBoundingClientRect();
-        paddle.x = (e.touches[0].clientX - rect.left) - paddle.w/2;
+        paddle.x = (e.touches.clientX - rect.left) - paddle.w/2;
         e.preventDefault();
     }, {passive: false});
 </script>
