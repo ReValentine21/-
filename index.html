@@ -9,7 +9,7 @@
             --primary: #007bff; 
             --accent: #00d4ff; 
             --bg: #020205; 
-            --card-bg: rgba(15, 15, 20, 0.7);
+            --card-bg: rgba(15, 15, 20, 0.85);
             --text: #e0e0e0;
         }
         
@@ -26,34 +26,43 @@
             background: radial-gradient(circle at center, #0a0a1a 0%, #020205 100%);
         }
         .blob {
-            position: absolute; width: 350px; height: 350px;
-            background: var(--primary); filter: blur(90px); border-radius: 50%;
-            opacity: 0.12; animation: move 20s infinite alternate;
+            position: absolute; width: 400px; height: 400px;
+            background: var(--primary); filter: blur(100px); border-radius: 50%;
+            opacity: 0.15; animation: move 25s infinite alternate;
         }
-        .blob.one { top: -50px; left: -50px; }
-        .blob.two { bottom: -50px; right: -100px; background: var(--accent); }
-        @keyframes move { from { transform: translate(0,0); } to { transform: translate(100px, 50px); } }
+        .blob.one { top: -100px; left: -100px; }
+        .blob.two { bottom: -100px; right: -100px; background: var(--accent); }
+        @keyframes move { from { transform: translate(0,0); } to { transform: translate(150px, 80px); } }
 
-        .container { max-width: 500px; margin: 0 auto; position: relative; }
+        .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 10; }
 
-        header { text-align: center; margin: 20px 0 40px; }
-        h1 { font-size: 2.6em; margin: 10px 0; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* АНИМАЦИЯ СВЕРКАНИЯ NEW */
-        @keyframes shine {
-            0% { box-shadow: 0 0 5px var(--accent); }
-            50% { box-shadow: 0 0 20px var(--accent), 0 0 10px #fff; }
-            100% { box-shadow: 0 0 5px var(--accent); }
+        /* АНИМАЦИЯ НИКА */
+        .nickname {
+            font-size: 2.8em; margin: 10px 0; font-weight: bold;
+            background: linear-gradient(90deg, #ffffff, #00d4ff, #007bff, #ffffff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: flow 6s linear infinite;
         }
-        .date.new { animation: shine 2s infinite; background: var(--accent); color: #000; }
+        @keyframes flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* МЯГКОЕ СВЕРКАНИЕ NEW */
+        @keyframes softShine {
+            0%, 100% { opacity: 0.8; box-shadow: 0 0 5px var(--accent); }
+            50% { opacity: 1; box-shadow: 0 0 12px var(--accent); }
+        }
+        .date.new { animation: softShine 3s infinite; background: var(--accent); color: #000; }
 
         .update-card { 
             background: var(--card-bg); border-radius: 24px; padding: 20px; 
-            margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); 
-            backdrop-filter: blur(12px);
+            margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08); 
+            backdrop-filter: blur(15px);
         }
 
-        /* КНОПКИ */
         .btn { 
             display: block; background: linear-gradient(135deg, var(--primary), var(--accent)); 
             color: #fff; padding: 14px; text-decoration: none; border-radius: 14px; 
@@ -61,40 +70,29 @@
         }
         
         .btn-more { 
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.4); 
-            color: var(--accent); font-size: 0.8em; cursor: pointer; padding: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(0, 212, 255, 0.3); 
+            color: var(--accent); font-size: 0.85em; cursor: pointer; padding: 12px;
             width: 100%; border-radius: 12px; margin-top: 12px; transition: 0.3s;
         }
-        .btn-more:hover { background: rgba(0, 212, 255, 0.1); }
 
-        /* ИДЕЯ ПРИЛОЖЕНИЯ */
-        .idea-card {
-            background: linear-gradient(to bottom, rgba(0,123,255,0.1), transparent);
-            border: 2px dashed rgba(0, 123, 255, 0.3); text-align: center;
+        /* КНОПКА МИНИ-ИГРЫ */
+        #game-toggle-btn {
+            background: #222; border: 1px solid #444; color: #888;
         }
-
-        /* СКРОЛЛБАР МЕДИА */
-        .media-container { 
-            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; 
-        }
-        .media-container::-webkit-scrollbar { height: 4px; }
-        .media-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        .media-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-        .media-container img, .media-container video { width: 200px; border-radius: 12px; flex-shrink: 0; }
-
-        .more-details { max-height: 0; opacity: 0; overflow: hidden; transition: 0.5s; }
-        .more-details.active { max-height: 1200px; opacity: 1; margin-top: 15px; }
-
-        /* СВЕЧЕНИЕ КНОПКИ ИГРЫ */
         #game-toggle-btn.active {
-            box-shadow: 0 0 20px var(--accent);
-            border-color: #fff;
-            color: #fff;
-            background: rgba(0, 212, 255, 0.2);
+            background: linear-gradient(135deg, #1a1a1a, var(--primary));
+            border-color: var(--accent); color: #fff; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
 
-        #pongCanvas { background: #000; width: 100%; height: 200px; border-radius: 12px; touch-action: none; }
+        .media-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+        .media-container::-webkit-scrollbar { height: 4px; }
+        .media-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        .media-container img { width: 220px; border-radius: 12px; flex-shrink: 0; }
+
+        .more-details { max-height: 0; opacity: 0; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .more-details.active { max-height: 1500px; opacity: 1; margin-top: 15px; }
+
+        #pongCanvas { background: #000; width: 100%; height: 200px; border-radius: 12px; }
         .date { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.7em; font-weight: bold; margin-bottom: 10px; background: #333; }
     </style>
 </head>
@@ -103,17 +101,26 @@
 <div class="bg-wrapper"><div class="blob one"></div><div class="blob two"></div></div>
 
 <div class="container">
-    <header>
-        <button class="btn-more" style="width:auto; padding: 5px 20px;" onclick="document.getElementById('about').classList.toggle('active')">КТО Я? 👨‍💻</button>
+    <header style="text-align:center;">
+        <button class="btn-more" style="width:auto; padding: 6px 25px;" onclick="toggleSection('about')">КТО Я? 👨‍💻</button>
         <div id="about" class="more-details">
-            <div style="background:rgba(0,0,0,0.4); padding:15px; border-radius:12px; font-size:0.9em; margin-bottom:20px;">
-                Привет! Я <b>ReValentine</b>. Мечтаю о геймдеве. Учу HTML и Python. В планах C# и Java.
+            <div style="background:rgba(0,0,0,0.5); padding:20px; border-radius:15px; text-align:left; font-size:0.95em; line-height:1.6; border: 1px solid var(--primary);">
+                <b>Привет, я ReValentine!</b><br>
+                Я новичок в программировании, который мечтает создавать крутые игры.<br><br>
+                <b>Что я изучаю сейчас:</b><br>
+                • Web: HTML (основы верстки этого сайта).<br>
+                • Logic: Python (создание игровой логики).<br><br>
+                <b>В планах на прокачку:</b><br>
+                Переход на более мощные инструменты: C# и Java.<br><br>
+                <b>Мой манифест:</b><br>
+                Это мой первый сайт, где живут мои проекты. Моя главная цель - освоить создание качественных 2D и 3D-миров. Я всегда нахожусь в поиске новых идей и стараюсь добавлять что-то уникальное в каждое обновление.
             </div>
         </div>
-        <h1>REVALENTINE</h1>
+        <div class="nickname">REVALENTINE</div>
         <p style="color: #666; margin: 0;">Проекты и игры</p>
     </header>
 
+    <!-- КАРТОЧКА SubBird -->
     <div class="update-card">
         <div class="date new">15 МАРТА 2026 • NEW</div>
         <h2 style="margin:0">SubBird GAME V0.1</h2>
@@ -124,38 +131,48 @@
                 <img src="https://via.placeholder.com">
                 <img src="https://via.placeholder.com">
             </div>
-            <div style="color:#aaa; font-size:0.9em;">Хардкорная птичка. Первая игра на Android.</div>
+            <p style="color:#bbb;">Хардкорная птичка. Первая игра на Android.</p>
         </div>
     </div>
 
+    <!-- КАРТОЧКА КAЛЬКУЛЯТОРА (ВЕРНУЛ) -->
     <div class="update-card">
         <div class="date">14 МАРТА 2026</div>
         <h2 style="margin:0">NCalc Calculator V0.2</h2>
         <a href="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/NCalcV1-0.2-arm64-v8a_armeabi-v7a-debug.apk" class="btn">СКАЧАТЬ ПРИЛОЖЕНИЕ</a>
         <button class="btn-more" onclick="toggleDetails(this)">ПОДРОБНЕЕ ↓</button>
         <div class="more-details">
-            <div class="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc3.mp4"><img src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc2.lmgur"></div>
-            <div style="color:#aaa; font-size:0.9em;">Калькулятор с адаптивным дизайном.</div>
+            <div class="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc3.mp4">
+                <img src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc2.lmgur">
+            </div>
+            <p style="color:#bbb;">Калькулятор с адаптивным дизайном. В версии 0.2 исправлены шрифты и добавлена поддержка разных разрешений экранов.</p>
         </div>
     </div>
 
-    <div class="update-card idea-card">
+    <!-- ИДЕЯ -->
+    <div class="update-card" style="border: 2px dashed #007bff; text-align:center; background:none;">
         <h3>💡 ЕСТЬ ИДЕЯ?</h3>
-        <p style="font-size: 0.9em; color: #888;">Напиши мне в Телеграм, и я добавлю это в обновление!</p>
-        <a href="https://t.me/DrdonutSwort" class="btn" style="background:#0088cc">ПРЕДЛОЖИТЬ ИДЕЮ</a>
+        <p>Напиши мне в ТГ, и я добавлю это в обновление!</p>
+        <a href="https://t.me/DrdonutSwort" class="btn" style="background:#0088cc; display:inline-block; padding: 10px 30px;">ПРЕДЛОЖИТЬ</a>
     </div>
 
-    <button id="game-toggle-btn" onclick="toggleGame()" class="btn-more" style="font-size: 1em; margin-bottom: 20px;">🎮 МИНИ-ИГРА (PONG)</button>
+    <!-- МИНИ-ИГРА -->
+    <button id="game-toggle-btn" onclick="toggleGame()" class="btn-more" style="font-size: 1.1em; margin-bottom: 20px;">🎮 МИНИ-ИГРА (PONG)</button>
     
-    <div id="game-panel" class="update-card" style="display:none;">
-        <div style="display:flex; justify-content:space-between; color:gold; font-family:monospace; margin-bottom:10px;">
-            <span>СЧЕТ: <span id="score">0</span></span>
-            <span>РЕКОРД: <span id="highScore">0</span></span>
+    <div id="game-panel" class="update-card" style="display:none; position:relative;">
+        <div style="display:flex; justify-content:space-between; color:gold; margin-bottom:10px; font-family:monospace;">
+            <span>SCORE: <span id="score">0</span></span>
+            <span>BEST: <span id="highScore">0</span></span>
         </div>
         <canvas id="pongCanvas"></canvas>
+        
+        <div id="start-screen" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.7); border-radius:24px;">
+            <button class="btn" onclick="startGame()" style="padding: 10px 40px; font-size:1.2em; box-shadow: 0 0 20px var(--primary);">СТАРТ</button>
+        </div>
+        
         <div id="game-over" style="display:none; text-align:center; margin-top:10px;">
             <h3 style="color:#ff0055">GAME OVER</h3>
-            <button class="btn" onclick="resetGame()" style="width:100px; display:inline-block">RESTART</button>
+            <button class="btn" onclick="startGame()" style="width:120px; display:inline-block">RESTART</button>
         </div>
     </div>
 
@@ -169,11 +186,15 @@
         btn.innerText = details.classList.contains('active') ? "СВЕРНУТЬ ↑" : "ПОДРОБНЕЕ ↓";
     }
 
-    // ИГРА PONG С ПРОГРЕССИЕЙ
+    function toggleSection(id) {
+        document.getElementById(id).classList.toggle('active');
+    }
+
     const canvas = document.getElementById("pongCanvas");
     const ctx = canvas.getContext("2d");
     const gBtn = document.getElementById("game-toggle-btn");
-    let score = 0, highScore = localStorage.getItem("pong_rec") || 0;
+    const startScr = document.getElementById("start-screen");
+    let score = 0, highScore = localStorage.getItem("p_rec") || 0;
     document.getElementById("highScore").innerText = highScore;
     let ball, paddle, gameRunning = false, anim;
 
@@ -186,23 +207,40 @@
         } else {
             panel.style.display = "block";
             gBtn.classList.add("active");
-            resetGame();
+            startScr.style.display = "flex";
+            document.getElementById("game-over").style.display = "none";
+            init(); 
+            drawStatic();
         }
     }
 
     function init() {
         canvas.width = canvas.offsetWidth;
-        // Начальная скорость ниже для комфорта (2 вместо 3)
-        ball = { x: canvas.width/2, y: 20, dx: 2, dy: 2, radius: 7, color: "#00d4ff" };
-        paddle = { w: 80, h: 10, x: (canvas.width-80)/2 };
+        ball = { x: canvas.width/2, y: 30, dx: 1.5, dy: 1.5, radius: 7, color: "#00d4ff" };
+        paddle = { w: 90, h: 10, x: (canvas.width-90)/2 };
         score = 0; document.getElementById("score").innerText = 0;
     }
 
-    function draw() {
+    function startGame() {
+        startScr.style.display = "none";
+        document.getElementById("game-over").style.display = "none";
+        gameRunning = true;
+        init();
+        requestAnimationFrame(loop);
+    }
+
+    function drawStatic() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+        ctx.fillStyle = ball.color; ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, canvas.height-15, paddle.w, paddle.h);
+    }
+
+    function loop() {
         if (!gameRunning) return;
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-        ctx.fillStyle = ball.color; ctx.fill(); ctx.closePath();
+        ctx.fillStyle = ball.color; ctx.fill();
         ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, canvas.height-15, paddle.w, paddle.h);
 
         if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) ball.dx = -ball.dx;
@@ -213,22 +251,15 @@
                 ball.dy = -ball.dy;
                 score++;
                 document.getElementById("score").innerText = score;
-                // УВЕЛИЧЕНИЕ СКОРОСТИ НА 3%
-                ball.dx *= 1.03;
-                ball.dy *= 1.03;
+                ball.dx *= 1.025; ball.dy *= 1.025;
             } else {
                 gameRunning = false;
                 document.getElementById("game-over").style.display = "block";
-                if(score > highScore) { highScore = score; localStorage.setItem("pong_rec", score); document.getElementById("highScore").innerText = score; }
+                if(score > highScore) { highScore = score; localStorage.setItem("p_rec", score); document.getElementById("highScore").innerText = score; }
             }
         }
         ball.x += ball.dx; ball.y += ball.dy;
-        anim = requestAnimationFrame(draw);
-    }
-
-    function resetGame() {
-        document.getElementById("game-over").style.display = "none";
-        cancelAnimationFrame(anim); gameRunning = true; init(); draw();
+        anim = requestAnimationFrame(loop);
     }
 
     canvas.addEventListener("touchmove", (e) => {
