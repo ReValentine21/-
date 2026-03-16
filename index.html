@@ -9,7 +9,7 @@
             --primary: #007bff; 
             --accent: #00d4ff; 
             --bg: #020205; 
-            --card-bg: rgba(18, 18, 25, 0.95);
+            --card-bg: rgba(20, 20, 25, 0.98);
             --text: #e0e0e0;
         }
         
@@ -19,21 +19,23 @@
             margin: 0; padding: 15px; overflow-x: hidden;
         }
 
+        /* ФОН БЕЗ ЛАГОВ */
         .bg-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden; background: #020205;
+            z-index: -1; background: #020205;
         }
         .blob {
-            position: absolute; width: 400px; height: 400px;
-            background: var(--primary); filter: blur(100px); border-radius: 50%;
-            opacity: 0.1; animation: move 25s infinite alternate linear;
+            position: absolute; width: 300px; height: 300px;
+            background: var(--primary); filter: blur(80px); border-radius: 50%;
+            opacity: 0.1; animation: move 20s infinite alternate linear;
         }
-        .blob.one { top: -100px; left: -100px; }
-        .blob.two { bottom: -100px; right: -100px; background: var(--accent); }
-        @keyframes move { from { transform: translate(0,0); } to { transform: translate(100px, 50px); } }
+        .blob.one { top: -50px; left: -50px; }
+        .blob.two { bottom: -50px; right: -50px; background: var(--accent); }
+        @keyframes move { from { transform: translate(0,0); } to { transform: translate(50px, 50px); } }
 
         .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 10; }
 
+        /* ПЛАВНЫЙ НИК */
         .nickname {
             font-size: 2.8em; margin: 10px 0; font-weight: bold; text-align: center;
             background: linear-gradient(to right, #fff, #00d4ff, #007bff, #00d4ff, #fff);
@@ -47,50 +49,52 @@
             100% { background-position: 200% center; }
         }
 
-        .subtitle { color: #666; margin: 0 0 40px 0; text-align: center; }
+        .subtitle { color: #555; margin: 0 0 35px 0; text-align: center; font-size: 0.9em; }
 
         .update-card { 
-            background: var(--card-bg); border-radius: 24px; padding: 20px; 
-            margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08); 
+            background: var(--card-bg); border-radius: 20px; padding: 18px; 
+            margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        .date { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.7em; font-weight: bold; margin-bottom: 10px; background: #333; }
-        .date.new { background: var(--accent); color: #000; animation: softShine 3s infinite; }
-        @keyframes softShine { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+        .date { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.7em; font-weight: bold; margin-bottom: 8px; background: #222; }
+        .date.new { background: var(--accent); color: #000; animation: softPulse 2s infinite; }
+        @keyframes softPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 
         .btn { 
             display: block; background: linear-gradient(135deg, var(--primary), var(--accent)); 
-            color: #fff; padding: 14px; text-decoration: none; border-radius: 14px; 
+            color: #fff; padding: 12px; text-decoration: none; border-radius: 12px; 
             font-weight: bold; text-align: center; margin-top: 10px; border: none;
         }
         
         .btn-more { 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(0, 212, 255, 0.3); 
-            color: var(--accent); font-size: 0.85em; cursor: pointer; padding: 12px;
-            width: 100%; border-radius: 12px; margin-top: 12px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); 
+            color: var(--accent); font-size: 0.8em; cursor: pointer; padding: 10px;
+            width: 100%; border-radius: 10px; margin-top: 10px;
         }
 
-        /* --- ИСПРАВЛЕННЫЙ РАЗМЕР СКРИНШОТОВ --- */
+        /* ФИКСИРОВАННЫЙ РАЗМЕР СКРИНШОТОВ */
         .media-container { 
-            display: flex; gap: 12px; overflow-x: auto; 
-            padding: 10px 0; margin-bottom: 10px;
-            scrollbar-width: none; /* Скрываем стандартный скролл для чистоты */
+            display: flex; gap: 10px; overflow-x: auto; 
+            padding: 10px 0; margin-bottom: 5px;
+            align-items: flex-start;
         }
-        .media-container img { 
-            height: 240px !important; /* Строгая высота */
+        .media-container img, .media-container video { 
+            height: 200px !important; 
             width: auto !important; 
-            border-radius: 12px; 
-            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 250px;
+            border-radius: 8px; 
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .status-text { color: var(--accent); font-size: 0.8em; font-weight: bold; margin-bottom: 10px; display: block; }
+        .status-text { color: var(--accent); font-size: 0.75em; font-weight: bold; margin-bottom: 8px; display: block; opacity: 0.9; }
 
-        .more-details { max-height: 0; opacity: 0; overflow: hidden; transition: 0.5s ease; }
-        .more-details.active { max-height: 1000px; opacity: 1; margin-top: 15px; }
+        .more-details { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease-out; }
+        .more-details.active { max-height: 800px; opacity: 1; margin-top: 10px; }
 
-        #pongCanvas { background: #000; width: 100%; height: 200px; border-radius: 12px; }
+        #game-toggle-btn.active { background: var(--primary); color: #fff; }
+        #pongCanvas { background: #000; width: 100%; height: 180px; border-radius: 10px; border: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -99,18 +103,16 @@
 
 <div class="container">
     <header>
-        <div style="text-align: center;">
-            <button class="btn-more" style="width:auto; padding: 6px 25px;" onclick="toggleSection('about')">КТО Я? 👨‍💻</button>
+        <div style="text-align: center; margin-top: 10px;">
+            <button class="btn-more" style="width:auto; padding: 5px 20px;" onclick="toggleSection('about')">КТО Я? 👨‍💻</button>
         </div>
         <div id="about" class="more-details">
-            <div style="background:rgba(10,10,15,0.95); padding:20px; border-radius:15px; text-align:left; font-size:0.95em; line-height:1.6; border: 1px solid var(--primary); margin-bottom: 20px;">
+            <div style="background:rgba(15,15,20,0.95); padding:15px; border-radius:12px; text-align:left; font-size:0.9em; line-height:1.5; border: 1px solid var(--primary); margin-bottom: 20px;">
                 <b>Привет, я ReValentine!</b><br>
-                Я новичок в программировании, который мечтает создавать крутые игры.<br><br>
-                <b>Что я изучаю сейчас:</b><br>
-                • Web: HTML (основы верстки этого сайта).<br>
-                • Logic: Python (создание игровой логики).<br><br>
-                <b>Мой манифест:</b><br>
-                Это мой первый сайт, где живут мои проекты. Моя главная цель - освоить создание качественных 2D и 3D-миров.
+                Я новичок в программировании, мечтаю о геймдеве.<br><br>
+                <b>Изучаю:</b> HTML и Python.<br>
+                <b>Цель:</b> C# и Java для 3D миров.<br>
+                Это мой первый сайт для хранения моих работ.
             </div>
         </div>
         <div class="nickname">REVALENTINE</div>
@@ -125,11 +127,12 @@
         <a href="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/SupBird.v0.1.apk" class="btn">СКАЧАТЬ ИГРУ</a>
         <button class="btn-more" onclick="toggleDetails(this)">ПОДРОБНЕЕ ↓</button>
         <div class="more-details">
-            <div class="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_bird1.mp4">
+            <div class="media-container">
+                <!-- Важно: в ссылках GitHub меняй blob на raw -->
                 <img src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_bird.imgur">
-                <img src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_bird2.imgur">
+                <video src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_bird1.mp4" controls></video>
             </div>
-            <p style="color:#bbb; font-size: 0.9em;">Хардкорная птичка. Первая игра на Android. Моя гордость!</p>
+            <p style="color:#999; font-size: 0.85em;">Мой первый проект на Android. Хардкорный геймплей.</p>
         </div>
     </div>
 
@@ -143,34 +146,34 @@
             <div class="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc3.mp4">
                 <img src="https://github.com/ReValentine21/-/releases/download/%D1%84%D0%B0%D0%B9%D0%BB/my_calc2.lmgur">
             </div>
-            <p style="color:#bbb; font-size: 0.9em;">Калькулятор с адаптивным дизайном.</p>
+            <p style="color:#999; font-size: 0.85em;">Удобный калькулятор с адаптивной версткой.</p>
         </div>
     </div>
 
     <!-- ИДЕЯ -->
-    <div class="update-card" style="border: 2px dashed #007bff; text-align:center; background:none;">
+    <div class="update-card" style="border: 1px dashed #007bff; text-align:center; background:none;">
         <h3 style="margin-top:0">💡 ЕСТЬ ИДЕЯ?</h3>
-        <a href="t.me/DrdonutSwort" class="btn" style="background:#0088cc; display:inline-block; padding: 10px 30px;">ПРЕДЛОЖИТЬ В ТГ</a>
+        <a href="https://t.me/DrdonutSwort" class="btn" style="background:#0088cc; display:inline-block; padding: 10px 25px;">ПРЕДЛОЖИТЬ В ТГ</a>
     </div>
 
-    <button id="game-toggle-btn" onclick="toggleGame()" class="btn-more" style="font-size: 1.1em; margin-bottom: 20px;">🎮 МИНИ-ИГРА (PONG)</button>
+    <button id="game-toggle-btn" onclick="toggleGame()" class="btn-more" style="font-size: 1em; margin-bottom: 20px;">🎮 МИНИ-ИГРА (PONG)</button>
     
     <div id="game-panel" class="update-card" style="display:none; position:relative;">
-        <div style="display:flex; justify-content:space-between; color:gold; margin-bottom:10px; font-family:monospace;">
+        <div style="display:flex; justify-content:space-between; color:gold; margin-bottom:10px; font-family:monospace; font-size:0.9em;">
             <span>SCORE: <span id="score">0</span></span>
             <span>BEST: <span id="highScore">0</span></span>
         </div>
         <canvas id="pongCanvas"></canvas>
-        <div id="start-screen" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); border-radius:24px;">
-            <button class="btn" onclick="startGame()" style="padding: 10px 40px;">СТАРТ</button>
+        <div id="start-screen" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.8); border-radius:20px;">
+            <button class="btn" onclick="startGame()" style="padding: 10px 30px;">СТАРТ</button>
         </div>
         <div id="game-over" style="display:none; text-align:center; margin-top:10px;">
-            <h3 style="color:#ff0055">GAME OVER</h3>
-            <button class="btn" onclick="startGame()" style="width:120px; display:inline-block">RESTART</button>
+            <h3 style="color:#ff0055; margin:5px;">GAME OVER</h3>
+            <button class="btn" onclick="startGame()" style="width:100px; display:inline-block; padding:8px;">RESTART</button>
         </div>
     </div>
 
-    <footer style="text-align:center; color:#444; font-size:0.8em; margin: 40px 0;">© 2026 ReValentine</footer>
+    <footer style="text-align:center; color:#333; font-size:0.75em; margin: 30px 0;">© 2026 ReValentine</footer>
 </div>
 
 <script>
@@ -210,8 +213,8 @@
 
     function init() {
         canvas.width = canvas.offsetWidth;
-        ball = { x: canvas.width/2, y: 30, dx: 1.5, dy: 1.5, radius: 7, color: "#00d4ff" };
-        paddle = { w: 90, h: 10, x: (canvas.width-90)/2 };
+        ball = { x: canvas.width/2, y: 30, dx: 1.5, dy: 1.5, radius: 6, color: "#00d4ff" };
+        paddle = { w: 80, h: 8, x: (canvas.width-80)/2 };
         score = 0; document.getElementById("score").innerText = 0;
     }
 
@@ -249,7 +252,11 @@
             } else {
                 gameRunning = false;
                 document.getElementById("game-over").style.display = "block";
-                if(score > highScore) { highScore = score; localStorage.setItem("p_rec", score); document.getElementById("highScore").innerText = score; }
+                if(score > highScore) { 
+                    highScore = score; 
+                    localStorage.setItem("p_rec", score); 
+                    document.getElementById("highScore").innerText = score; 
+                }
             }
         }
         ball.x += ball.dx; ball.y += ball.dy;
@@ -258,7 +265,7 @@
 
     canvas.addEventListener("touchmove", (e) => {
         let rect = canvas.getBoundingClientRect();
-        paddle.x = (e.touches.clientX - rect.left) - paddle.w/2;
+        paddle.x = (e.touches[0].clientX - rect.left) - paddle.w/2;
         if(paddle.x < 0) paddle.x = 0;
         if(paddle.x > canvas.width - paddle.w) paddle.x = canvas.width - paddle.w;
         e.preventDefault();
